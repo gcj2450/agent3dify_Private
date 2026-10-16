@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f8fa" />
+  <title>Agent3dify · 三维建模工作台</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23272b31'/%3E%3Cpath d='m16 5 10 6v11l-10 6-10-6V11Zm0 0v12m10-6-10 6-10-6m10 6v11' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E" />
+  <script type="module" crossorigin src="/assets/index-DVKdjrRo.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Bj-H4jJU.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Agent3dify 首页"><span class="brand-mark" data-icon="cube"></span><span>Agent3dify<span class="brand-sub">CAD WORKSPACE</span></span></a>
+      <button class="new-chat" id="newChat"><span data-icon="plus"></span><span>新建建模任务</span><span class="key">N</span></button>
+      <div class="nav-caption">工作空间<span id="sessionCount">0</span></div>
+      <nav id="sessions" aria-label="建模会话"><div class="no-sessions">你的建模任务会保存在这里</div></nav>
+      <div class="sidebar-bottom"><div class="local-label"><i></i><span>本地工作空间</span></div><button class="settings-trigger" id="settingsOpen"><span data-icon="settings"></span><span>模型与连接</span><i id="connectionDot" class="connection-dot"></i></button><div class="sidebar-foot">三视图 → 参数化 CAD</div></div>
+    </aside>
+    <section class="conversation">
+      <header class="conversation-header"><div><span class="eyebrow">建模助手</span><h1 id="chatTitle">新建任务</h1></div><button id="downloadDiagnostics" class="text-button" disabled title="下载本任务的执行记录与错误详情">下载诊断日志</button></header>
+      <div id="chatScroll" class="chat-scroll">
+        <div id="welcome" class="welcome"><div class="welcome-mark" data-icon="cube"></div><span class="eyebrow">把想法变成实体</span><h2>从三视图，<br>到三维模型。</h2><p>上传工程图，让智能体理解结构、生成模型。<br>边看边聊，逐步打磨每一个细节。</p><div class="workflow"><span><b>01</b> 上传图纸</span><span class="workflow-line"></span><span><b>02</b> 智能建模</span><span class="workflow-line"></span><span><b>03</b> 对话修改</span></div><button id="chooseDrawing" class="welcome-upload"><span data-icon="upload"></span>选择三视图图片<span data-icon="arrowRight"></span></button><button id="sample" class="text-button">使用示例工程图 <span>↗</span></button><div class="welcome-note">支持一张组合图，或分别上传最多 3 张视图</div></div>
+        <div id="messages" class="messages" aria-live="polite"></div>
+        <div id="working" class="working" hidden><span class="spinner"></span><span id="workingText">正在理解图纸…</span><span class="working-dots">···</span></div>
+      </div>
+      <details id="activity" class="activity"><summary><span data-icon="terminal"></span><span>执行记录</span><span id="activityCount">0</span><span class="activity-chevron">⌃</span></summary><div id="activityLog" class="activity-log"></div></details>
+      <div class="composer-area"><div id="queueHint" class="queue-hint" hidden></div><form id="composer" class="composer"><div id="attachments" class="attachments"></div><textarea id="message" rows="3" placeholder="描述建模要求，或上传三视图开始…" aria-label="建模要求与修改意见"></textarea><div class="composer-bottom"><button type="button" id="attach" class="icon-button" title="上传三视图" aria-label="上传三视图"><span data-icon="paperclip"></span></button><span id="modelLabel" class="model-label">gpt-5.6-sol</span><span class="composer-spacer"></span><button id="stop" type="button" class="stop-button" title="停止执行" hidden><span data-icon="stop"></span></button><button id="send" type="submit" class="send-button" title="发送 · Enter" aria-label="发送消息"><span data-icon="arrowUp"></span></button></div></form><div class="composer-hint" id="composerHint">Enter 发送 · Shift + Enter 换行</div></div>
+    </section>
+    <main class="preview-panel" id="previewPanel">
+      <header class="preview-header"><div class="preview-tabs" role="tablist" aria-label="预览内容"><button class="active" data-tab="model" role="tab" aria-selected="true"><span data-icon="cube"></span>三维模型</button><button data-tab="drawing" role="tab" aria-selected="false"><span data-icon="image"></span>参考图纸</button><button data-tab="source" role="tab" aria-selected="false"><span data-icon="code"></span>代码</button></div><button id="download" class="export-button" disabled><span data-icon="download"></span><span>导出 STEP</span></button></header>
+      <div class="preview-body">
+        <div id="modelPane" class="pane model-pane"><div class="viewport-top"><span class="viewport-label"><i id="modelDot"></i><span id="previewStatus">等待模型生成</span></span><span class="units">mm</span></div><div id="viewport" class="viewport"></div><div id="previewEmpty" class="preview-empty"><div class="blueprint-cube"><svg viewBox="0 0 180 180" fill="none"><path d="m90 25 57 32v66l-57 33-57-33V57Z"/><path d="m33 57 57 33 57-33M90 90v66"/><path d="m90 25 0 65M33 123l57-33 57 33" class="hidden-line"/><path d="M15 142h30m-15-15v30M135 25h30m-15-15v30" class="guideline"/></svg></div><h2>模型将在这里呈现</h2><p>每次生成和修改，都会自动更新预览</p><div class="preview-empty-tags"><span>实时预览</span><span>自由旋转</span><span>参数化模型</span></div></div><div class="viewer-controls"><div class="view-presets"><button data-view="iso" class="active" title="等轴测">透视</button><button data-view="front">前</button><button data-view="top">顶</button><button data-view="right">右</button></div><div class="viewer-tools"><button id="wireframe" class="icon-button" title="线框模式" aria-label="线框模式" aria-pressed="false"><span data-icon="wireframe"></span></button><button id="grid" class="icon-button active" title="显示网格" aria-label="显示网格" aria-pressed="true"><span data-icon="grid"></span></button><span class="tool-divider"></span><button id="fit" class="icon-button" title="适应窗口" aria-label="适应窗口"><span data-icon="expand"></span></button></div></div><div class="viewport-bottom"><span id="dimensions">X — &nbsp; Y — &nbsp; Z —</span><span class="mouse-hint">拖拽旋转 · 右键平移 · 滚轮缩放</span></div><div class="axis"><span class="axis-z">Z</span><span class="axis-y">Y</span><span class="axis-x">X</span></div></div>
+        <div id="drawingPane" class="pane drawing-pane" hidden><div id="drawingEmpty" class="pane-empty">上传的三视图将在这里显示</div><img id="drawingPreview" alt="参考工程图" hidden/><div class="drawing-caption" id="drawingCaption"></div></div>
+        <div id="sourcePane" class="pane source-pane" hidden><div class="source-header"><span>generated/model.py</span><button class="text-button" id="copyCode">复制代码</button></div><pre id="sourceCode">模型生成后，可在此查看参数化 CadQuery 代码。</pre></div>
+      </div>
+      <section class="artifacts-panel"><div class="artifacts-header"><h2><span data-icon="folder"></span>生成文件 <span id="fileCount">0</span></h2><span class="auto-sync"><i></i> 自动同步</span></div><div id="files" class="file-list"><div class="files-empty">STEP、STL、建模代码与检查报告会保存在这里</div></div></section>
+      <footer class="preview-footer"><span><i class="live-dot"></i><span id="footerState">工作台已就绪</span></span><span id="revision">未开始建模</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden />
+  <dialog id="settings" class="settings-dialog"><form id="settingsForm"><div class="dialog-header"><div><span class="eyebrow">连接你的智能体</span><h2>模型与连接</h2></div><button type="button" id="settingsClose" class="icon-button" aria-label="关闭设置"><span data-icon="close"></span></button></div><label for="baseUrl">API 代理地址</label><input id="baseUrl" type="url" required placeholder="http://host:port/v1" /><p class="field-hint">兼容 OpenAI API，根地址会自动补全 /v1。</p><label for="apiKey">API Key <span id="keyState"></span></label><input id="apiKey" type="password" autocomplete="new-password" placeholder="留空保留服务器已配置的密钥" /><label for="modelInput">模型名称</label><div class="model-input-row"><select id="modelInput" required aria-label="选择模型"><option value="gpt-5.6-sol">gpt-5.6-sol</option></select><button type="button" id="loadModels">读取模型</button></div><p class="field-hint">从代理返回的列表中选择模型；保存后新任务和空闲任务使用所选模型。</p><div id="settingsStatus" class="settings-status"></div><div class="dialog-bottom"><span>密钥仅保存在本地服务端</span><button id="saveSettings" type="submit" class="primary-button">保存设置</button></div></form></dialog>
+</body>
+</html>

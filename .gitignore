@@ -1,0 +1,13 @@
+__pycache__/
+.env
+*.pyc
+
+drawing_to_cad_workspace/
+.venv/
+frontend/node_modules/
+test-results/
+.pytest_cache/
+
+frontend/artifacts-ui.png
+.logs/
+/chili3d_Private
